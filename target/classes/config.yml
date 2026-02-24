@@ -1,0 +1,13 @@
+# AutoPickup configuration
+# Messages support & color codes (e.g. &a for green)
+
+settings:
+  # Default state for new players who have never used /autopickup
+  default-enabled: false
+
+messages:
+  toggled-on: "&aAuto-pickup has been &fenabled&a."
+  toggled-off: "&cAuto-pickup has been &fdisabled&c."
+  no-permission: "&cYou do not have permission to use this command."
+  players-only: "&cThis command can only be used by players."
+  invalid-usage: "&cUsage: /autopickup [on|off]"

@@ -1,0 +1,17 @@
+name: AutoPickup
+version: '1.0.0'
+main: com.autopickup.AutoPickupPlugin
+api-version: '1.21'
+author: AutoPickup
+description: Auto-pickup block drops into player inventory when mining
+
+commands:
+  autopickup:
+    description: Toggle auto-pickup for block drops
+    usage: /<command> [on|off]
+    aliases: [ap]
+
+permissions:
+  autopickup.use:
+    description: Allow toggling auto-pickup
+    default: true

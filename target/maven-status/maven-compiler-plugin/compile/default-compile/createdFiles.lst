@@ -1,0 +1,6 @@
+com\autopickup\placeholder\AutoPickupPlaceholder.class
+com\autopickup\command\AutoPickupTabCompleter.class
+com\autopickup\listener\BlockBreakListener.class
+com\autopickup\AutoPickupPlugin.class
+com\autopickup\command\AutoPickupCommand.class
+com\autopickup\manager\PlayerStateManager.class
