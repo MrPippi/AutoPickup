@@ -7,11 +7,14 @@ description: Auto-pickup block drops into player inventory when mining
 
 commands:
   autopickup:
-    description: Toggle auto-pickup for block drops
-    usage: /<command> [on|off]
+    description: Toggle auto-pickup or open the filter mode GUI
+    usage: /<command> [on|off|mode]
     aliases: [ap]
 
 permissions:
   autopickup.use:
-    description: Allow toggling auto-pickup
+    description: Allow toggling auto-pickup on/off
+    default: true
+  autopickup.mode:
+    description: Allow opening the filter GUI (/autopickup mode)
     default: true

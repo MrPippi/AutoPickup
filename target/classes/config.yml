@@ -10,4 +10,4 @@ messages:
   toggled-off: "&cAuto-pickup has been &fdisabled&c."
   no-permission: "&cYou do not have permission to use this command."
   players-only: "&cThis command can only be used by players."
-  invalid-usage: "&cUsage: /autopickup [on|off]"
+  invalid-usage: "&cUsage: /autopickup [on|off|mode]"

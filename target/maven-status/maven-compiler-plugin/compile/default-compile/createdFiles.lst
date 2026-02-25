@@ -1,6 +1,11 @@
 com\autopickup\placeholder\AutoPickupPlaceholder.class
+com\autopickup\command\AutoPickupCommand.class
+com\autopickup\gui\FilterGuiListener$GuiSession.class
+com\autopickup\manager\FilterManager.class
+com\autopickup\model\FilterMode.class
 com\autopickup\command\AutoPickupTabCompleter.class
 com\autopickup\listener\BlockBreakListener.class
 com\autopickup\AutoPickupPlugin.class
-com\autopickup\command\AutoPickupCommand.class
 com\autopickup\manager\PlayerStateManager.class
+com\autopickup\gui\FilterGuiListener$1.class
+com\autopickup\gui\FilterGuiListener.class

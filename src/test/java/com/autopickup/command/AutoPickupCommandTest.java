@@ -1,6 +1,7 @@
 package com.autopickup.command;
 
 import com.autopickup.AutoPickupPlugin;
+import com.autopickup.gui.FilterGuiListener;
 import com.autopickup.manager.PlayerStateManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
@@ -31,6 +32,8 @@ class AutoPickupCommandTest {
     @Mock
     private PlayerStateManager stateManager;
     @Mock
+    private FilterGuiListener filterGuiListener;
+    @Mock
     private CommandSender sender;
     @Mock
     private Player player;
@@ -42,7 +45,7 @@ class AutoPickupCommandTest {
 
     @BeforeEach
     void setUp() {
-        executor = new AutoPickupCommand(plugin, stateManager);
+        executor = new AutoPickupCommand(plugin, stateManager, filterGuiListener);
         lenient().when(plugin.getMessage(anyString())).thenAnswer(inv -> Component.text((String) inv.getArgument(0)));
         lenient().when(player.getUniqueId()).thenReturn(PLAYER_UUID);
     }

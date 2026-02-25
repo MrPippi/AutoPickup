@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.autopickup.command.AutoPickupCommandTest
 -------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.136 s -- in com.autopickup.command.AutoPickupCommandTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.293 s -- in com.autopickup.command.AutoPickupCommandTest

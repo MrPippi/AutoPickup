@@ -1,6 +1,9 @@
+E:\plugins\AutoPickup\src\main\java\com\autopickup\gui\FilterGuiListener.java
+E:\plugins\AutoPickup\src\main\java\com\autopickup\model\FilterMode.java
 E:\plugins\AutoPickup\src\main\java\com\autopickup\command\AutoPickupTabCompleter.java
 E:\plugins\AutoPickup\src\main\java\com\autopickup\AutoPickupPlugin.java
 E:\plugins\AutoPickup\src\main\java\com\autopickup\command\AutoPickupCommand.java
 E:\plugins\AutoPickup\src\main\java\com\autopickup\listener\BlockBreakListener.java
+E:\plugins\AutoPickup\src\main\java\com\autopickup\manager\FilterManager.java
 E:\plugins\AutoPickup\src\main\java\com\autopickup\placeholder\AutoPickupPlaceholder.java
 E:\plugins\AutoPickup\src\main\java\com\autopickup\manager\PlayerStateManager.java
