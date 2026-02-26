@@ -1,0 +1,11 @@
+# AutoPickup language messages
+# Supports & color codes (e.g. &a green, &c red) and MiniMessage tags (e.g. <green>, <#RRGGBB>)
+# https://docs.adventure.kyori.net/minimessage/format.html
+
+messages:
+  toggled-on: "&aAuto-pickup has been &fenabled&a."
+  toggled-off: "&cAuto-pickup has been &fdisabled&c."
+  no-permission: "&cYou do not have permission to use this command."
+  players-only: "&cThis command can only be used by players."
+  invalid-usage: "&cUsage: /autopickup [on|off|mode|reload]"
+  reloaded: "&aConfiguration reloaded."
