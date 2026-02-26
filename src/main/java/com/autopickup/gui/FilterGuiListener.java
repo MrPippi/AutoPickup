@@ -4,6 +4,7 @@ import com.autopickup.AutoPickupPlugin;
 import com.autopickup.manager.FilterManager;
 import com.autopickup.model.FilterMode;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.configuration.file.FileConfiguration;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -62,7 +63,7 @@ public class FilterGuiListener implements Listener {
             synchronized (FilterGuiListener.class) {
                 if (cachedMaterials == null) {
                     cachedMaterials = Arrays.stream(Material.values())
-                            .filter(m -> m.isBlock() && !m.isAir()
+                            .filter(m -> m.isItem() && !m.isAir()
                                     && !m.name().startsWith("LEGACY_"))
                             .sorted(Comparator.comparing(Enum::name))
                             .toList();
@@ -138,11 +139,15 @@ public class FilterGuiListener implements Listener {
         int totalPages        = Math.max(1, (int) Math.ceil(mats.size() / (double) ITEMS_PER_PAGE));
 
         // --- Title ---
-        String modeColor = modeColor(mode);
-        String titleStr = "§8Filter §7| " + modeColor + mode.name()
-                + " §8| §7" + (page + 1) + "/" + totalPages;
+        String modeDisplay = mode.getDisplayName(plugin.getGuiConfig());
+        String titleFormat = guiStr("title.format", "§8Filter §7| {mode} §8| §7{page}/{total_pages}");
+        String titleStr = titleFormat
+                .replace("{mode}", modeDisplay.replace('&', '§'))
+                .replace("{page}", String.valueOf(page + 1))
+                .replace("{total_pages}", String.valueOf(totalPages));
         if (!session.searchTerm().isBlank()) {
-            titleStr += "  §8[§7" + session.searchTerm() + "§8]";
+            String suffix = guiStr("title.search-suffix", "  §8[§7{search}§8]").replace("{search}", session.searchTerm());
+            titleStr += suffix;
         }
         Inventory inv = Bukkit.createInventory(null, GUI_SIZE, LEGACY.deserialize(titleStr));
 
@@ -157,47 +162,49 @@ public class FilterGuiListener implements Listener {
         // --- Control bar ---
 
         // 45: Previous page
+        String prevLore = guiStr("buttons.prev.lore", "§8Page §7{page} §8/ §7{total_pages}")
+                .replace("{page}", String.valueOf(page)).replace("{total_pages}", String.valueOf(totalPages));
         if (page > 0) {
             inv.setItem(SLOT_PREV, buildControl(Material.ARROW,
-                    "§7◀ Previous Page",
-                    List.of("§8Page §7" + page + " §8/ §7" + totalPages)));
+                    guiStr("buttons.prev.name", "§7◀ Previous Page"),
+                    List.of(prevLore)));
         } else {
             inv.setItem(SLOT_PREV, buildControl(Material.GRAY_DYE,
-                    "§8◀ Previous Page",
-                    List.of("§8Already on first page")));
+                    guiStr("buttons.prev.name-disabled", "§8◀ Previous Page"),
+                    List.of(guiStr("buttons.prev.lore-disabled", "§8Already on first page"))));
         }
 
         // 46: Mode toggle
         List<String> modeLore = new ArrayList<>();
+        String loreCurrentPrefix = guiStr("buttons.mode.lore-current-prefix", "§f§l» ");
+        String loreOtherPrefix = guiStr("buttons.mode.lore-other-prefix", "§8   ");
         for (FilterMode fm : FilterMode.values()) {
-            String prefix = (fm == mode) ? "§f§l» " : "§8   ";
-            modeLore.add(prefix + fm.getDisplayName());
-            modeLore.add("  " + fm.getDescription());
+            String prefix = (fm == mode) ? loreCurrentPrefix : loreOtherPrefix;
+            modeLore.add(prefix + fm.getDisplayName(plugin.getGuiConfig()).replace('&', '§'));
+            modeLore.add("  " + fm.getDescription(plugin.getGuiConfig()).replace('&', '§'));
             modeLore.add("");
         }
-        modeLore.add("§7Click to cycle mode");
-        inv.setItem(SLOT_MODE, buildControl(Material.COMPARATOR, "§eFilter Mode", modeLore));
+        modeLore.add(guiStr("buttons.mode.lore-cycle", "§7Click to cycle mode"));
+        inv.setItem(SLOT_MODE, buildControl(Material.COMPARATOR,
+                guiStr("buttons.mode.name", "§eFilter Mode"), modeLore));
 
         // 47: Search
         String searchDisplay = session.searchTerm().isBlank()
-                ? "§8(none)" : "§f" + session.searchTerm();
+                ? guiStr("buttons.search.placeholder-none", "§8(none)")
+                : ("§f" + session.searchTerm());
+        List<String> searchLore = guiStrList("buttons.search.lore", List.of(
+                "§7Current: {search_display}", "", "§7Click, then type in chat", "§8Type §ccancel §8to keep current search"));
+        searchLore = searchLore.stream().map(s -> s.replace("{search_display}", searchDisplay)).toList();
         inv.setItem(SLOT_SEARCH, buildControl(Material.SPYGLASS,
-                "§e\uD83D\uDD0D Search Items",
-                List.of(
-                        "§7Current: " + searchDisplay,
-                        "",
-                        "§7Click, then type in chat",
-                        "§8Type §ccancel §8to keep current search"
-                )));
+                guiStr("buttons.search.name", "§e🔍 Search Items"),
+                searchLore));
 
         // 48: Clear
+        List<String> clearLore = guiStrList("buttons.clear.lore", List.of("§7Items in list: §f{count}", "", "§7Click to remove all items"));
+        clearLore = clearLore.stream().map(s -> s.replace("{count}", String.valueOf(list.size()))).toList();
         inv.setItem(SLOT_CLEAR, buildControl(Material.BARRIER,
-                "§c✖ Clear Filter List",
-                List.of(
-                        "§7Items in list: §f" + list.size(),
-                        "",
-                        "§7Click to remove all items"
-                )));
+                guiStr("buttons.clear.name", "§c✖ Clear Filter List"),
+                clearLore));
 
         // 49-51: Filler
         ItemStack filler = buildFiller();
@@ -207,17 +214,19 @@ public class FilterGuiListener implements Listener {
 
         // 52: Close
         inv.setItem(SLOT_CLOSE, buildControl(Material.RED_STAINED_GLASS_PANE,
-                "§c✖ Close", List.of()));
+                guiStr("buttons.close.name", "§c✖ Close"), List.of()));
 
         // 53: Next page
+        String nextLore = guiStr("buttons.next.lore", "§8Page §7{page} §8/ §7{total_pages}")
+                .replace("{page}", String.valueOf(page + 2)).replace("{total_pages}", String.valueOf(totalPages));
         if (page < totalPages - 1) {
             inv.setItem(SLOT_NEXT, buildControl(Material.ARROW,
-                    "§7Next Page ▶",
-                    List.of("§8Page §7" + (page + 2) + " §8/ §7" + totalPages)));
+                    guiStr("buttons.next.name", "§7Next Page ▶"),
+                    List.of(nextLore)));
         } else {
             inv.setItem(SLOT_NEXT, buildControl(Material.GRAY_DYE,
-                    "§8Next Page ▶",
-                    List.of("§8Already on last page")));
+                    guiStr("buttons.next.name-disabled", "§8Next Page ▶"),
+                    List.of(guiStr("buttons.next.lore-disabled", "§8Already on last page"))));
         }
 
         return inv;
@@ -234,17 +243,15 @@ public class FilterGuiListener implements Listener {
 
         String prettyName = prettyName(mat);
         if (selected) {
-            meta.displayName(LEGACY.deserialize("§a✔ " + prettyName));
-            meta.lore(List.of(
-                    LEGACY.deserialize("§aSelected"),
-                    LEGACY.deserialize("§7Click to remove from filter")
-            ));
+            String prefix = guiStr("item-slot.selected.name-prefix", "§a✔ ");
+            meta.displayName(LEGACY.deserialize(prefix + prettyName));
+            List<String> lore = guiStrList("item-slot.selected.lore", List.of("§aSelected", "§7Click to remove from filter"));
+            meta.lore(lore.stream().map(LEGACY::deserialize).collect(Collectors.toList()));
         } else {
-            meta.displayName(LEGACY.deserialize("§7" + prettyName));
-            meta.lore(List.of(
-                    LEGACY.deserialize("§8Not selected"),
-                    LEGACY.deserialize("§7Click to add to filter")
-            ));
+            String prefix = guiStr("item-slot.unselected.name-prefix", "§7");
+            meta.displayName(LEGACY.deserialize(prefix + prettyName));
+            List<String> lore = guiStrList("item-slot.unselected.lore", List.of("§8Not selected", "§7Click to add to filter"));
+            meta.lore(lore.stream().map(LEGACY::deserialize).collect(Collectors.toList()));
         }
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
@@ -317,8 +324,10 @@ public class FilterGuiListener implements Listener {
             FilterMode newMode = filterManager.getMode(uuid).next();
             filterManager.setMode(uuid, newMode);
             filterManager.save();
-            player.sendMessage(LEGACY.deserialize(
-                    "§8[AutoPickup] §7Filter mode: " + modeColor(newMode) + newMode.name()));
+            String modeMsg = guiStr("messages.mode-changed", "§8[AutoPickup] §7Filter mode: {mode}")
+                    .replace("{mode}", newMode.getDisplayName(plugin.getGuiConfig()).replace('&', '§'));
+            player.sendMessage(LEGACY.deserialize(modeMsg));
+
             openGui(player, session.page(), session.searchTerm());
 
         } else if (slot == SLOT_SEARCH) {
@@ -326,12 +335,13 @@ public class FilterGuiListener implements Listener {
             pendingSearch.put(uuid, session);
             player.closeInventory();
             player.sendMessage(LEGACY.deserialize(
-                    "§8[AutoPickup] §eType item name to search §8(or §ccancel §8to go back)§e:"));
+                    guiStr("messages.search-prompt", "§8[AutoPickup] §eType item name to search §8(or §ccancel §8to go back)§e:")));
 
         } else if (slot == SLOT_CLEAR) {
             filterManager.clearList(uuid);
             filterManager.save();
-            player.sendMessage(LEGACY.deserialize("§8[AutoPickup] §7Filter list cleared."));
+            player.sendMessage(LEGACY.deserialize(
+                    guiStr("messages.filter-cleared", "§8[AutoPickup] §7Filter list cleared.")));
             openGui(player, session.page(), session.searchTerm());
 
         } else if (slot == SLOT_CLOSE) {
@@ -414,5 +424,22 @@ public class FilterGuiListener implements Listener {
             sb.append(part.substring(1));
         }
         return sb.toString();
+    }
+
+    /** Gets a GUI config string and converts & to § for legacy serialization. */
+    private String guiStr(String path, String fallback) {
+        FileConfiguration cfg = plugin.getGuiConfig();
+        if (cfg == null) return fallback.replace('&', '§');
+        return cfg.getString(path, fallback).replace('&', '§');
+    }
+
+    private List<String> guiStrList(String path, List<String> fallback) {
+        FileConfiguration cfg = plugin.getGuiConfig();
+        if (cfg == null) {
+            return fallback != null ? fallback.stream().map(s -> s.replace('&', '§')).toList() : List.of();
+        }
+        List<String> list = cfg.getStringList(path);
+        if (list == null || list.isEmpty()) return fallback != null ? fallback.stream().map(s -> s.replace('&', '§')).toList() : List.of();
+        return list.stream().map(s -> s.replace('&', '§')).toList();
     }
 }

@@ -1,0 +1,69 @@
+# AutoPickup GUI content – edit these to change menu text.
+# Supports & color codes (e.g. &a green, &c red). Placeholders are replaced at runtime:
+#   Title: {mode}, {page}, {total_pages}, {search}
+#   Buttons: {page}, {total_pages}, {search_display}, {count}
+
+title:
+  format: "&8Filter &7| {mode} &8| &7{page}/{total_pages}"
+  search-suffix: "  &8[&7{search}&8]"
+
+buttons:
+  prev:
+    name: "&7\u25C0 Previous Page"
+    name-disabled: "&8\u25C0 Previous Page"
+    lore: "&8Page &7{page} &8/ &7{total_pages}"
+    lore-disabled: "&8Already on first page"
+  next:
+    name: "&7Next Page \u25B6"
+    name-disabled: "&8Next Page \u25B6"
+    lore: "&8Page &7{page} &8/ &7{total_pages}"
+    lore-disabled: "&8Already on last page"
+  mode:
+    name: "&eFilter Mode"
+    lore-current-prefix: "&f&l\u00BB "
+    lore-other-prefix: "&8   "
+    lore-cycle: "&7Click to cycle mode"
+  search:
+    name: "&e\uD83D\uDD0D Search Items"
+    lore:
+      - "&7Current: {search_display}"
+      - ""
+      - "&7Click, then type in chat"
+      - "&8Type &ccancel &8to keep current search"
+    placeholder-none: "&8(none)"
+  clear:
+    name: "&c\u2716 Clear Filter List"
+    lore:
+      - "&7Items in list: &f{count}"
+      - ""
+      - "&7Click to remove all items"
+  close:
+    name: "&c\u2716 Close"
+
+modes:
+  NONE:
+    display: "&7None"
+    description: "&7Pick up all items (no filter)"
+  WHITELIST:
+    display: "&aWhitelist"
+    description: "&aOnly pick up items in the list"
+  BLACKLIST:
+    display: "&cBlacklist"
+    description: "&cPick up all except items in the list"
+
+item-slot:
+  selected:
+    name-prefix: "&a\u2714 "
+    lore:
+      - "&aSelected"
+      - "&7Click to remove from filter"
+  unselected:
+    name-prefix: "&7"
+    lore:
+      - "&8Not selected"
+      - "&7Click to add to filter"
+
+messages:
+  search-prompt: "&8[AutoPickup] &eType item name to search &8(or &ccancel &8to go back)&e:"
+  filter-cleared: "&8[AutoPickup] &7Filter list cleared."
+  mode-changed: "&8[AutoPickup] &7Filter mode: {mode}"

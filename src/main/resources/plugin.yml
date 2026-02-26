@@ -8,7 +8,7 @@ description: Auto-pickup block drops into player inventory when mining
 commands:
   autopickup:
     description: Toggle auto-pickup or open the filter mode GUI
-    usage: /<command> [on|off|mode]
+    usage: /<command> [on|off|mode|reload]
     aliases: [ap]
 
 permissions:
@@ -18,3 +18,6 @@ permissions:
   autopickup.mode:
     description: Allow opening the filter GUI (/autopickup mode)
     default: true
+  autopickup.reload:
+    description: Allow reloading plugin configuration
+    default: op

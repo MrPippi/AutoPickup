@@ -9,15 +9,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Handles /autopickup [on|off|mode]:
+ * Handles /autopickup [on|off|mode|reload]:
  *   on/off  – toggles auto-pickup state
  *   mode    – opens the filter GUI (whitelist / blacklist / none)
+ *   reload  – reloads plugin configuration
  *   (none)  – toggles current state
  */
 public class AutoPickupCommand implements CommandExecutor {
 
-    private static final String PERMISSION_USE  = "autopickup.use";
-    private static final String PERMISSION_MODE = "autopickup.mode";
+    private static final String PERMISSION_USE   = "autopickup.use";
+    private static final String PERMISSION_MODE  = "autopickup.mode";
+    private static final String PERMISSION_RELOAD = "autopickup.reload";
 
     private final AutoPickupPlugin   plugin;
     private final PlayerStateManager stateManager;
@@ -33,6 +35,17 @@ public class AutoPickupCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // /autopickup reload
+        if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission(PERMISSION_RELOAD)) {
+                sender.sendMessage(plugin.getMessage("messages.no-permission"));
+                return true;
+            }
+            plugin.reload();
+            sender.sendMessage(plugin.getMessage("messages.reloaded"));
+            return true;
+        }
+
         // /autopickup mode
         if (args.length > 0 && args[0].equalsIgnoreCase("mode")) {
             if (!sender.hasPermission(PERMISSION_MODE)) {

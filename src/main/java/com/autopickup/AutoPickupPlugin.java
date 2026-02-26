@@ -8,8 +8,11 @@ import com.autopickup.manager.FilterManager;
 import com.autopickup.manager.PlayerStateManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -55,10 +58,13 @@ public class AutoPickupPlugin extends JavaPlugin {
 
     private PlayerStateManager stateManager;
     private FilterManager filterManager;
+    private File guiConfigFile;
+    private FileConfiguration guiConfig;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        loadGuiConfig();
         boolean defaultEnabled = getConfig().getBoolean("settings.default-enabled", false);
 
         stateManager  = new PlayerStateManager(getDataFolder(), defaultEnabled, getLogger());
@@ -96,6 +102,42 @@ public class AutoPickupPlugin extends JavaPlugin {
 
     public PlayerStateManager getStateManager()  { return stateManager;  }
     public FilterManager      getFilterManager() { return filterManager; }
+
+    /**
+     * Reloads all plugin configuration and data files.
+     * Called by /autopickup reload. Does not recreate managers.
+     */
+    public void reload() {
+        reloadConfig();
+        loadGuiConfig();
+        stateManager.load();
+        filterManager.load();
+    }
+
+    private void loadGuiConfig() {
+        guiConfigFile = new File(getDataFolder(), "gui.yml");
+        if (!guiConfigFile.exists()) {
+            saveResource("gui.yml", false);
+        }
+        guiConfig = YamlConfiguration.loadConfiguration(guiConfigFile);
+    }
+
+    /**
+     * Returns the GUI content configuration. Use {@link #getGuiMessage(String)} for
+     * a path that supports & color codes and is parsed to a Component.
+     */
+    public FileConfiguration getGuiConfig() {
+        return guiConfig;
+    }
+
+    /**
+     * Reads a string from gui.yml and returns it as an Adventure Component.
+     * Supports the same & / § color codes as config messages.
+     */
+    public Component getGuiMessage(String path) {
+        String msg = guiConfig != null ? guiConfig.getString(path, "") : "";
+        return MINI_MESSAGE.deserialize(legacyToMiniMessage(msg));
+    }
 
     /** Returns plugin author name for PlaceholderAPI expansion. */
     public String getPluginAuthor()  { return PLUGIN_AUTHOR;  }
