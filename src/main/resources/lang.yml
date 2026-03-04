@@ -9,3 +9,13 @@ messages:
   players-only: "&cThis command can only be used by players."
   invalid-usage: "&cUsage: /autopickup [on|off|mode|reload]"
   reloaded: "&aConfiguration reloaded."
+
+  # ActionBar pickup notification.
+  # Placeholders:
+  #   {entries} – comma-separated list of all item lines (each formatted by actionbar-entry below)
+  #   {total}   – total number of items picked up across all types
+  actionbar: "&a+ &f{entries}"
+
+  # Format for each item type shown inside {entries}.
+  # Placeholders: {item} = item translation key (e.g. "block.minecraft.stone"), {count} = quantity
+  actionbar-entry: "<translate:{item}> &7x{count}"

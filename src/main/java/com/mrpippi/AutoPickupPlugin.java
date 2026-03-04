@@ -4,6 +4,7 @@ import com.autopickup.command.AutoPickupCommand;
 import com.autopickup.command.AutoPickupTabCompleter;
 import com.autopickup.gui.FilterGuiListener;
 import com.autopickup.listener.BlockBreakListener;
+import com.autopickup.manager.ActionBarManager;
 import com.autopickup.manager.FilterManager;
 import com.autopickup.manager.PlayerStateManager;
 import net.kyori.adventure.text.Component;
@@ -58,20 +59,26 @@ public class AutoPickupPlugin extends JavaPlugin {
 
     private PlayerStateManager stateManager;
     private FilterManager filterManager;
+    private ActionBarManager actionBarManager;
     private File guiConfigFile;
     private FileConfiguration guiConfig;
+    private File langConfigFile;
+    private FileConfiguration langConfig;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        loadLangConfig();
         loadGuiConfig();
         boolean defaultEnabled = getConfig().getBoolean("settings.default-enabled", false);
 
-        stateManager  = new PlayerStateManager(getDataFolder(), defaultEnabled, getLogger());
+        stateManager     = new PlayerStateManager(getDataFolder(), defaultEnabled, getLogger());
         stateManager.load();
 
         filterManager = new FilterManager(getDataFolder(), getLogger());
         filterManager.load();
+
+        actionBarManager = new ActionBarManager(this);
 
         FilterGuiListener filterGuiListener = new FilterGuiListener(this, filterManager);
 
@@ -80,12 +87,12 @@ public class AutoPickupPlugin extends JavaPlugin {
         cmd.setTabCompleter(new AutoPickupTabCompleter());
 
         getServer().getPluginManager().registerEvents(
-                new BlockBreakListener(stateManager, filterManager), this);
+                new BlockBreakListener(this, stateManager, filterManager), this);
         getServer().getPluginManager().registerEvents(filterGuiListener, this);
 
         if (getServer().getPluginManager().getPlugin("Veinminer") != null) {
             getServer().getPluginManager().registerEvents(
-                    new com.autopickup.listener.VeinMinerListener(stateManager, filterManager), this);
+                    new com.autopickup.listener.VeinMinerListener(this, stateManager, filterManager), this);
             getLogger().info("VeinMiner integration enabled.");
         }
 
@@ -106,8 +113,9 @@ public class AutoPickupPlugin extends JavaPlugin {
         if (filterManager != null) filterManager.save();
     }
 
-    public PlayerStateManager getStateManager()  { return stateManager;  }
-    public FilterManager      getFilterManager() { return filterManager; }
+    public PlayerStateManager getStateManager()    { return stateManager;    }
+    public FilterManager      getFilterManager()   { return filterManager;   }
+    public ActionBarManager   getActionBarManager(){ return actionBarManager; }
 
     /**
      * Reloads all plugin configuration and data files.
@@ -115,9 +123,23 @@ public class AutoPickupPlugin extends JavaPlugin {
      */
     public void reload() {
         reloadConfig();
+        loadLangConfig();
         loadGuiConfig();
         stateManager.load();
         filterManager.load();
+    }
+
+    private void loadLangConfig() {
+        langConfigFile = new File(getDataFolder(), "lang.yml");
+        if (!langConfigFile.exists()) {
+            saveResource("lang.yml", false);
+        }
+        langConfig = YamlConfiguration.loadConfiguration(langConfigFile);
+    }
+
+    /** Returns the lang.yml configuration (may be null if not yet loaded). */
+    public FileConfiguration getLangConfig() {
+        return langConfig;
     }
 
     private void loadGuiConfig() {
@@ -161,7 +183,7 @@ public class AutoPickupPlugin extends JavaPlugin {
      * </ul>
      */
     public Component getMessage(String path) {
-        String msg = getConfig().getString(path, "");
+        String msg = langConfig != null ? langConfig.getString(path, "") : getConfig().getString(path, "");
         return MINI_MESSAGE.deserialize(legacyToMiniMessage(msg));
     }
 

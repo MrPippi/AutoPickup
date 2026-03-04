@@ -5,6 +5,13 @@ settings:
   # Default state for new players who have never used /autopickup
   default-enabled: false
 
+  # ActionBar pickup notification
+  actionbar:
+    # Enable or disable the actionbar pickup notification
+    enabled: true
+    # How many ticks the actionbar remains visible after the last pickup (20 ticks = 1 second)
+    display-ticks: 40
+
 messages:
   toggled-on: "&aAuto-pickup has been &fenabled&a."
   toggled-off: "&cAuto-pickup has been &fdisabled&c."

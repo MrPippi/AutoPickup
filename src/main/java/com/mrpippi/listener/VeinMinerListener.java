@@ -1,9 +1,11 @@
 package com.autopickup.listener;
 
+import com.autopickup.AutoPickupPlugin;
 import com.autopickup.manager.FilterManager;
 import com.autopickup.manager.PlayerStateManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,10 +49,12 @@ public class VeinMinerListener implements Listener {
     private final java.lang.reflect.Method itemsGetter;
     private final java.lang.reflect.Method playerGetter;
 
+    private final AutoPickupPlugin   plugin;
     private final PlayerStateManager stateManager;
     private final FilterManager      filterManager;
 
-    public VeinMinerListener(PlayerStateManager stateManager, FilterManager filterManager) {
+    public VeinMinerListener(AutoPickupPlugin plugin, PlayerStateManager stateManager, FilterManager filterManager) {
+        this.plugin        = plugin;
         this.stateManager  = stateManager;
         this.filterManager = filterManager;
 
@@ -103,7 +107,17 @@ public class VeinMinerListener implements Listener {
 
             it.remove();
 
+            Material material = stack.getType();
+            int originalAmount = stack.getAmount();
+
             Map<Integer, ItemStack> leftover = player.getInventory().addItem(stack);
+            int leftoverAmount = leftover.values().stream().mapToInt(ItemStack::getAmount).sum();
+            int pickedUp = originalAmount - leftoverAmount;
+
+            if (pickedUp > 0) {
+                plugin.getActionBarManager().record(player, material, pickedUp);
+            }
+
             for (ItemStack overflow : leftover.values()) {
                 if (overflow != null && !overflow.getType().isAir()) {
                     dropLocation.getWorld().dropItemNaturally(dropLocation, overflow);
