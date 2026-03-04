@@ -12,7 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,23 +43,20 @@ public class BlockBreakListener implements Listener {
 
         Location dropLocation = event.getBlockState().getLocation();
 
-        // Snapshot the stacks and clear the event list so nothing drops automatically
-        List<ItemStack> stacks = new ArrayList<>();
-        for (Item item : items) {
-            ItemStack stack = item.getItemStack();
-            if (stack != null && !stack.getType().isAir()) {
-                stacks.add(stack);
-            }
-        }
-        items.clear();
+        // Iterate over items that should be picked up; remove them from the event so the
+        // game never spawns them as entities. Items that should NOT be picked up are left in
+        // the event list and fall naturally with their original physics.
+        java.util.Iterator<Item> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            Item entity = iterator.next();
+            ItemStack stack = entity.getItemStack();
+            if (stack == null || stack.getType().isAir()) continue;
+            if (!filterManager.shouldPickup(player.getUniqueId(), stack.getType())) continue;
 
-        for (ItemStack stack : stacks) {
-            // Check filter: if this material should not be auto-picked up, drop it naturally
-            if (!filterManager.shouldPickup(player.getUniqueId(), stack.getType())) {
-                dropLocation.getWorld().dropItemNaturally(dropLocation, stack);
-                continue;
-            }
-            // Add to inventory; overflow drops naturally
+            // Remove from event so this item will NOT be spawned on the ground
+            iterator.remove();
+
+            // Add to inventory; overflow spawns naturally at the drop location
             Map<Integer, ItemStack> leftover = player.getInventory().addItem(stack);
             for (ItemStack overflow : leftover.values()) {
                 if (overflow != null && !overflow.getType().isAir()) {

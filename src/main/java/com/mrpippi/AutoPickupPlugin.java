@@ -83,6 +83,12 @@ public class AutoPickupPlugin extends JavaPlugin {
                 new BlockBreakListener(stateManager, filterManager), this);
         getServer().getPluginManager().registerEvents(filterGuiListener, this);
 
+        if (getServer().getPluginManager().getPlugin("Veinminer") != null) {
+            getServer().getPluginManager().registerEvents(
+                    new com.autopickup.listener.VeinMinerListener(stateManager, filterManager), this);
+            getLogger().info("VeinMiner integration enabled.");
+        }
+
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             try {
                 Class<?> clazz = Class.forName("com.autopickup.placeholder.AutoPickupPlaceholder");
