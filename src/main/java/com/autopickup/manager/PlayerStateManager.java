@@ -22,7 +22,7 @@ public class PlayerStateManager {
 
     private final File dataFolder;
     private final Logger logger;
-    private final boolean defaultEnabled;
+    private volatile boolean defaultEnabled;
     private final Map<UUID, Boolean> stateByUuid = new ConcurrentHashMap<>();
     private File stateFile;
     private FileConfiguration stateConfig;
@@ -46,6 +46,14 @@ public class PlayerStateManager {
      */
     public boolean isEnabled(UUID uuid) {
         return stateByUuid.getOrDefault(uuid, defaultEnabled);
+    }
+
+    /**
+     * Updates the default state used for players not yet in storage.
+     * Call this after reloading config so new players see the updated default.
+     */
+    public void setDefaultEnabled(boolean defaultEnabled) {
+        this.defaultEnabled = defaultEnabled;
     }
 
     /**

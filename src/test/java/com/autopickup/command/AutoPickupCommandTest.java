@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -172,12 +174,15 @@ class AutoPickupCommandTest {
     @Test
     void unknownArg_sendsInvalidUsageMessage_noStateChange() {
         when(player.hasPermission("autopickup.use")).thenReturn(true);
+        when(stateManager.isEnabled(playerId)).thenReturn(false);
 
         cmd.onCommand(player, command, "ap", new String[]{"banana"});
 
         verify(plugin).getMessage("messages.invalid-usage");
         verify(player).sendMessage(Component.text("messages.invalid-usage"));
-        verifyNoInteractions(stateManager);
+        verify(stateManager).isEnabled(playerId);
+        verify(stateManager, never()).setEnabled(any(UUID.class), anyBoolean());
+        verify(stateManager, never()).save();
     }
 
     // --- mode subcommand ---

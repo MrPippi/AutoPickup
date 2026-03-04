@@ -110,6 +110,7 @@ public class AutoPickupPlugin extends JavaPlugin {
     public void reload() {
         reloadConfig();
         loadGuiConfig();
+        stateManager.setDefaultEnabled(getConfig().getBoolean("settings.default-enabled", false));
         stateManager.load();
         filterManager.load();
     }

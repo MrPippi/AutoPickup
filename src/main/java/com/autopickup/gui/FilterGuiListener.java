@@ -52,7 +52,26 @@ public class FilterGuiListener implements Listener {
             LegacyComponentSerializer.legacySection();
 
     /**
-     * All item-type materials (no legacy / air), sorted by name.
+     * Admin-only / unobtainable items excluded from the filter GUI.
+     * These items cannot be obtained in normal survival gameplay and have no
+     * relevance to block-drop auto-pickup.
+     */
+    private static final Set<Material> ADMIN_ONLY_ITEMS = Set.of(
+            Material.COMMAND_BLOCK,
+            Material.CHAIN_COMMAND_BLOCK,
+            Material.REPEATING_COMMAND_BLOCK,
+            Material.COMMAND_BLOCK_MINECART,
+            Material.STRUCTURE_BLOCK,
+            Material.STRUCTURE_VOID,
+            Material.JIGSAW,
+            Material.BARRIER,
+            Material.LIGHT,
+            Material.DEBUG_STICK,
+            Material.KNOWLEDGE_BOOK
+    );
+
+    /**
+     * All obtainable item-type materials (no legacy / air / admin-only), sorted by name.
      * Computed lazily on first use so that class loading does not trigger the
      * Paper registry (which requires a live server) — this keeps unit tests happy.
      */
@@ -64,7 +83,8 @@ public class FilterGuiListener implements Listener {
                 if (cachedMaterials == null) {
                     cachedMaterials = Arrays.stream(Material.values())
                             .filter(m -> m.isItem() && !m.isAir()
-                                    && !m.name().startsWith("LEGACY_"))
+                                    && !m.name().startsWith("LEGACY_")
+                                    && !ADMIN_ONLY_ITEMS.contains(m))
                             .sorted(Comparator.comparing(Enum::name))
                             .toList();
                 }
