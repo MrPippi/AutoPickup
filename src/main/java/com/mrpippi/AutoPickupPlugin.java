@@ -26,7 +26,7 @@ import java.util.Objects;
 public class AutoPickupPlugin extends JavaPlugin {
 
     private static final String PLUGIN_AUTHOR  = "AutoPickup";
-    private static final String PLUGIN_VERSION = "2.0.0";
+    private static final String PLUGIN_VERSION = "2.0.1";
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 

@@ -4,9 +4,13 @@
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-10-09
+
+插件功能與 2.0.0 相同，伺服器需求不變（Java 25、Paper 26.2），可直接替換 JAR。
+
 ### 變更
 
-- 測試依賴：JUnit 5.14.4 → 6.1.3。只影響測試，產出的 JAR 不變；81 個測試不需修改即全數通過。
+- 測試依賴：JUnit 5.14.4 → 6.1.3。只影響測試；除了版本號，JAR 內容與 2.0.0 相同。81 個測試不需修改即全數通過。
 
 ## [2.0.0] - 2026-10-09
 
@@ -57,6 +61,7 @@
 - 核心功能的 characterization tests（JUnit 5 + Mockito，共 73 個），記錄目前的行為。
 - 測試用的 `TestRegistryAccess`，讓 `Material.isAir()` 不需要啟動伺服器也能在測試中使用。
 
-[Unreleased]: https://github.com/MrPippi/AutoPickup/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/MrPippi/AutoPickup/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/MrPippi/AutoPickup/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/MrPippi/AutoPickup/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/MrPippi/AutoPickup/tree/6c3257c
