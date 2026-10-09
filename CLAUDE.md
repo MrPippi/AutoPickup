@@ -196,3 +196,4 @@ CI: `.github/workflows/build.yml` runs `./mvnw -B verify` on JDK 25 (Temurin) an
 7. **Event priority** — `BlockDropItemEvent` is handled at `HIGHEST` with `ignoreCancelled = true` so other plugins can cancel drops first.
 8. **Overflow drops use block world** — always call `dropLocation.getWorld()`, not `player.getWorld()`, to avoid cross-world item drops.
 9. **No new files without need** — prefer editing existing files; keep the package structure flat and minimal.
+10. **Pin GitHub Actions to commit SHAs** — write `uses: owner/action@<40-char SHA> # vX.Y.Z`, never a bare tag; resolve the SHA with `git ls-remote --tags https://github.com/owner/action` and update the SHA and the version comment together.
