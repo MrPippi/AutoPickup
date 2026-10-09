@@ -120,13 +120,14 @@ public class ActionBarManager {
     /**
      * Builds the full ActionBar component from the accumulated pickup map.
      *
-     * <p>Template: {@code settings.actionbar-format} in lang.yml with placeholder
+     * <p>Template: {@code messages.actionbar} (config.yml or lang.yml, see
+     * {@link AutoPickupPlugin#resolveMessage}) with placeholder
      * {@code {entries}} being a comma-joined list of per-entry strings and
      * {@code {total}} being the sum of all counts.
      */
     private Component buildActionBar(Map<Material, Integer> pickups) {
-        String entryTemplate = getLangString("messages.actionbar-entry", "<translate:{item}> &7x{count}");
-        String barTemplate   = getLangString("messages.actionbar", "&a+ &f{entries}");
+        String entryTemplate = getTemplate("messages.actionbar-entry", "<translate:{item}> &7x{count}");
+        String barTemplate   = getTemplate("messages.actionbar", "&a+ &f{entries}");
 
         List<String> entryStrings = new ArrayList<>();
         int total = 0;
@@ -150,13 +151,10 @@ public class ActionBarManager {
         return miniMessage.deserialize(AutoPickupPlugin.legacyToMiniMessage(barRaw));
     }
 
-    private String getLangString(String path, String fallback) {
+    private String getTemplate(String path, String fallback) {
         try {
-            var langConfig = plugin.getLangConfig();
-            if (langConfig != null) {
-                String val = langConfig.getString(path);
-                if (val != null) return val;
-            }
+            String val = plugin.getMessageTemplate(path);
+            if (val != null) return val;
         } catch (Exception ignored) {}
         return fallback;
     }

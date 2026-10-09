@@ -119,10 +119,17 @@ settings:
     display-ticks: 40
 
 messages:
-  # …（見下方說明）
+  toggled-on:    "&aAuto-pickup has been &fenabled&a."
+  # …其餘訊息與 lang.yml 相同（見下方）
 ```
 
-> **注意：** 目前所有聊天訊息都從 `lang.yml` 讀取，`config.yml` 裡的 `messages:` 區塊**不會被使用**。要修改訊息請編輯 `lang.yml`。
+訊息可以寫在 `config.yml` 或 `lang.yml`，規則如下：
+
+1. `config.yml` 裡**被改過**的訊息（跟內建預設值不同，或是新增了內建沒有的 key，例如 `actionbar`）優先使用。
+2. 其餘訊息從 `lang.yml` 讀取。
+3. 兩邊都沒有時，使用內建預設值。
+
+因此只想改幾句訊息時，直接改 `config.yml` 就會生效；沒改的訊息不會蓋掉你在 `lang.yml` 的設定。改完執行 `/autopickup reload` 即可套用。
 
 ### `gui.yml`
 
@@ -137,7 +144,7 @@ messages:
 
 ### `lang.yml`
 
-所有聊天訊息與 ActionBar 文字的來源。支援 `&` 色碼（如 `&a` 綠色）與 MiniMessage 標籤（如 `<green>`、`<#RRGGBB>`），兩種可以混用。
+聊天訊息與 ActionBar 文字的來源（`config.yml` 中被改過的同名訊息會優先，見上方）。支援 `&` 色碼（如 `&a` 綠色）與 MiniMessage 標籤（如 `<green>`、`<#RRGGBB>`），兩種可以混用。
 
 ```yaml
 messages:

@@ -16,9 +16,8 @@
 - PlaceholderAPI 的 Maven repository 改為 `https://repo.helpch.at/releases/`。舊網址 `repo.extendedclip.com` 現在只會轉址，在有網路白名單的環境會導致建置失敗。
 - Maven 插件（都維持 3.x）：compiler 3.11.0 → 3.16.0、enforcer 3.4.1 → 3.6.3、surefire 3.2.5 → 3.6.0。Java 版本改由單一的 `maven.compiler.release` 屬性設定。
 - 測試依賴：JUnit 5.10.2 → 5.14.4、Mockito 5.11.0 → 5.24.0。surefire 3.6.0 之後 Mockito 無法在測試 JVM 中 self-attach，因此改用 `-javaagent` 載入，由 maven-dependency-plugin 的 `properties` goal 提供 jar 路徑。
-- 文件：README 新增依賴說明、ActionBar 設定與 VeinMiner 整合的說明，並修正兩處跟實際行為不符的描述：
-  - `/autopickup reload` 不會存檔，而是重新讀取檔案。
-  - 聊天訊息實際從 `lang.yml` 讀取，`config.yml` 的 `messages:` 目前沒有作用。
+- **`config.yml` 的 `messages:` 現在會生效。** 以前所有訊息都只從 `lang.yml` 讀取，`config.yml` 裡的訊息改了也沒反應。現在的規則是：`config.yml` 中被改過的訊息（跟內建預設不同，或是內建沒有的 key）優先；其餘從 `lang.yml` 讀取；兩邊都沒有就用內建預設。ActionBar 模板（`messages.actionbar`、`messages.actionbar-entry`）也套用同一套規則。原本在 `lang.yml` 改過的訊息不受影響。
+- 文件：README 新增依賴說明、ActionBar 設定與 VeinMiner 整合的說明，並修正 `/autopickup reload` 的描述：它不會存檔，而是重新讀取檔案。
 
 ### 新增
 
@@ -36,6 +35,7 @@
 2. 如果有用 PlaceholderAPI，建議升到 **2.12.3 以上**。根據 PlaceholderAPI 的版本說明，該版修正了 Paper 26.2 新版本號格式的解析問題。
 3. 如果有用 VeinMiner，請確認你的 VeinMiner 版本支援 Paper 26.2。
 4. `plugins/AutoPickup/` 底下的設定檔與資料檔（`players.yml`、`filters.yml`）格式沒有變，可以直接沿用。
+5. 如果你曾經在 `config.yml` 的 `messages:` 改過訊息（以前不會生效），升級後這些修改會開始生效，並優先於 `lang.yml`。
 
 ## [1.0.0]
 
