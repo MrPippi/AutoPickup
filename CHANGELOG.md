@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### 變更
+
+- Release workflow 使用的 `actions/checkout`、`actions/setup-java` 改用完整的 commit SHA 固定版本（v7.0.1、v6.0.1），避免有 `contents: write` 權限的 workflow 因為上游 tag 被改動而執行到不同的程式碼。
+
 ## [2.0.1] - 2026-10-09
 
 插件功能與 2.0.0 相同，伺服器需求不變（Java 25、Paper 26.2），可直接替換 JAR。

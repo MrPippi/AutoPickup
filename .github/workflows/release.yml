@@ -4,6 +4,9 @@ name: Release
 # - Pushing a tag v* releases that tag with the current JDK (25).
 # - Run manually (Actions → Release → Run workflow) to release an older commit: the tag is
 #   created at `target` if it doesn't exist yet. Release notes come from CHANGELOG.md on main.
+#
+# Actions are pinned to full commit SHAs (version in the trailing comment) because this
+# workflow runs with contents: write. Update both the SHA and the comment together.
 on:
   push:
     tags: ['v*']
@@ -31,11 +34,11 @@ jobs:
       TARGET: ${{ inputs.target }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ inputs.target || inputs.tag || github.ref }}
           fetch-depth: 0
-      - uses: actions/setup-java@v6
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version || '25' }}
