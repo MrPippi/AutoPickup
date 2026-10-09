@@ -60,7 +60,7 @@ Note: directory is `com/mrpippi/`; Java package declarations use `com.autopickup
 - Calls `saveDefaultConfig()`, `loadGuiConfig()`, then reads `settings.default-enabled`
 - Instantiates `PlayerStateManager` and `FilterManager`, registers listeners and command
 - PlaceholderAPI integration is **optional** and loaded via reflection so the plugin runs without PAPI on the classpath
-- `getMessage(String path)` reads from `lang.yml` (always loaded in `onEnable`, so `config.yml` `messages:` is effectively unused), converts `&` codes and MiniMessage tags via `legacyToMiniMessage()` + `MiniMessage.deserialize()`
+- `getMessage(String path)` resolves the template via `resolveMessage(path, getConfig(), langConfig)`: a `config.yml` value that differs from the bundled default (or has no bundled default) wins, then `lang.yml`, then the bundled default; then converts `&` codes and MiniMessage tags via `legacyToMiniMessage()` + `MiniMessage.deserialize()`
 - `getGuiMessage(String path)` does the same but reads from `gui.yml`
 - `reload()` reloads all config/data files; called by `/autopickup reload`
 
@@ -129,7 +129,7 @@ messages:
   reloaded:      "&aConfiguration reloaded."
 ```
 
-All message values support `&` color codes and MiniMessage tags. Note: `getMessage()` actually reads `lang.yml`, so these `messages:` entries are not used at runtime. `settings.actionbar.enabled` / `display-ticks` control the ActionBar pickup notification.
+All message values support `&` color codes and MiniMessage tags. An edited `config.yml` message overrides the same key in `lang.yml`; unedited defaults fall through to `lang.yml` (see `AutoPickupPlugin.resolveMessage`). `ActionBarManager` resolves `messages.actionbar*` the same way. `settings.actionbar.enabled` / `display-ticks` control the ActionBar pickup notification.
 
 ### `gui.yml`
 Controls all GUI text: title format, button names/lore, mode display names, item slot prefixes.
@@ -137,7 +137,7 @@ Supports the same color code syntax plus runtime placeholders: `{mode}`, `{page}
 Accessed via `AutoPickupPlugin.getGuiMessage(String path)` or `getGuiConfig()`.
 
 ### `lang.yml`
-Source of all chat messages (`messages.*`) plus the ActionBar templates `messages.actionbar` / `messages.actionbar-entry`. Same keys and syntax as the `config.yml` `messages:` block.
+Fallback source for chat messages (`messages.*`) and the ActionBar templates `messages.actionbar` / `messages.actionbar-entry`, used when `config.yml` doesn't override the key.
 
 ### `plugin.yml`
 - Command: `autopickup`, alias: `ap`

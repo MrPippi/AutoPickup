@@ -1,6 +1,8 @@
 # AutoPickup language messages
 # Supports & color codes (e.g. &a green, &c red) and MiniMessage tags (e.g. <green>, <#RRGGBB>)
 # https://docs.adventure.kyori.net/minimessage/format.html
+#
+# A message that is changed in config.yml (messages:) takes priority over the same key here.
 
 messages:
   toggled-on: "&aAuto-pickup has been &fenabled&a."

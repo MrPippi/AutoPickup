@@ -9,12 +9,14 @@ import com.autopickup.manager.FilterManager;
 import com.autopickup.manager.PlayerStateManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Main plugin class for AutoPickup.
@@ -183,8 +185,43 @@ public class AutoPickupPlugin extends JavaPlugin {
      * </ul>
      */
     public Component getMessage(String path) {
-        String msg = langConfig != null ? langConfig.getString(path, "") : getConfig().getString(path, "");
+        String msg = Objects.requireNonNullElse(getMessageTemplate(path), "");
         return MINI_MESSAGE.deserialize(legacyToMiniMessage(msg));
+    }
+
+    /**
+     * Returns the raw (unparsed) message template for {@code path}, or {@code null} if neither
+     * config.yml nor lang.yml defines it. See {@link #resolveMessage} for precedence.
+     */
+    public String getMessageTemplate(String path) {
+        return resolveMessage(path, getConfig(), langConfig);
+    }
+
+    /**
+     * Resolves a message template from config.yml and lang.yml.
+     *
+     * <ol>
+     *   <li>config.yml, if the server's file sets {@code path} to something other than the
+     *       bundled default (an edited message, or a key the bundled config.yml doesn't have);
+     *   <li>otherwise lang.yml;
+     *   <li>otherwise config.yml including its bundled defaults;
+     *   <li>otherwise {@code null}.
+     * </ol>
+     *
+     * <p>Unedited bundled defaults in config.yml therefore never shadow a customised lang.yml.
+     */
+    public static String resolveMessage(String path, Configuration config, FileConfiguration lang) {
+        if (config != null && config.contains(path, true)) {
+            String value = config.getString(path);
+            Configuration defaults = config.getDefaults();
+            String bundled = defaults != null ? defaults.getString(path) : null;
+            if (value != null && !value.equals(bundled)) return value;
+        }
+        if (lang != null) {
+            String value = lang.getString(path);
+            if (value != null) return value;
+        }
+        return config != null ? config.getString(path) : null;
     }
 
     /**

@@ -12,6 +12,9 @@ settings:
     # How many ticks the actionbar remains visible after the last pickup (20 ticks = 1 second)
     display-ticks: 40
 
+# Chat messages. Any message you change here (or add, e.g. actionbar / actionbar-entry)
+# takes priority over lang.yml; messages left at their default values fall back to lang.yml.
+# Supports & color codes and MiniMessage tags.
 messages:
   toggled-on: "&aAuto-pickup has been &fenabled&a."
   toggled-off: "&cAuto-pickup has been &fdisabled&c."
