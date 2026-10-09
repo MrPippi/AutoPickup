@@ -10,9 +10,9 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 
 | 項目 | 版本 |
 |------|------|
-| 伺服器 | Paper 1.21.x（或相容分支，如 Purpur）；以 Paper API 1.21.11 建置 |
-| Java | 21 |
-| 建置 | JDK 21；Maven 由 `./mvnw` 提供（3.9.16） |
+| 伺服器 | Paper 26.2（或相容分支）；1.21.x 請使用 AutoPickup 1.x |
+| Java | 25 |
+| 建置 | JDK 25；Maven 由 `./mvnw` 提供（3.9.16） |
 
 ---
 
@@ -22,15 +22,15 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 ./mvnw clean package     # Windows：mvnw.cmd clean package
 ```
 
-產出 JAR：`target/AutoPickup-1.0.0.jar`
+產出 JAR：`target/AutoPickup-2.0.0.jar`
 
-> 建置前請將 `JAVA_HOME` 設為 JDK 21；enforcer 會拒絕其他版本。
+> 建置前請將 `JAVA_HOME` 設為 JDK 25；enforcer 會拒絕其他版本。
 
 ---
 
 ## 安裝
 
-1. 將 `AutoPickup-1.0.0.jar` 放入伺服器 `plugins/` 目錄。
+1. 將 `AutoPickup-2.0.0.jar` 放入伺服器 `plugins/` 目錄。
 2. 啟動或重載伺服器（`/reload confirm` 或重啟）。
 3. 插件會自動建立 `plugins/AutoPickup/config.yml`、`gui.yml`、`lang.yml`。
 
@@ -133,7 +133,7 @@ messages:
 
 ## PlaceholderAPI（可選）
 
-安裝 [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) 後自動啟用：
+安裝 [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) 後自動啟用（Paper 26.2 建議使用 PlaceholderAPI 2.12.3 以上，該版修正了 Paper 新版本號格式的解析）：
 
 | 佔位符 | 回傳值 |
 |--------|--------|

@@ -1,7 +1,7 @@
 name: AutoPickup
-version: '1.0.0'
+version: '2.0.0'
 main: com.autopickup.AutoPickupPlugin
-api-version: '1.21'
+api-version: '26.2'
 author: AutoPickup
 description: Auto-pickup block drops into player inventory when mining
 

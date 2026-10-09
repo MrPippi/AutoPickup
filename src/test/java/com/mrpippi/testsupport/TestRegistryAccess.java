@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  * Test-only RegistryAccess, loaded by Paper via ServiceLoader
  * (META-INF/services/io.papermc.paper.registry.RegistryAccess).
  *
- * <p>Paper 1.21's {@code Material.isAir()} looks up the block registry, which normally
+ * <p>Paper's {@code Material.isAir()} looks up the block registry, which normally
  * requires a running server. This stub returns a BlockType whose {@code isAir()} is true
  * for air, cave_air and void_air; every other registry is an empty mock.
  */
