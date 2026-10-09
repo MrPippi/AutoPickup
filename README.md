@@ -4,6 +4,8 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 
 支援每位玩家獨立的開關狀態與物品過濾清單（白名單 / 黑名單），資料在重啟後仍會保留。
 
+> **2.0.0 起需要 Java 25 與 Paper 26.2。** 1.21.x 伺服器請繼續使用 AutoPickup 1.x。版本差異見 [CHANGELOG.md](CHANGELOG.md)。
+
 ---
 
 ## 需求
@@ -11,8 +13,9 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 | 項目 | 版本 |
 |------|------|
 | 伺服器 | Paper 26.2（或相容分支）；1.21.x 請使用 AutoPickup 1.x |
-| Java | 25 |
-| 建置 | JDK 25；Maven 由 `./mvnw` 提供（3.9.16） |
+| Java（伺服器） | 25 |
+| 建置 | JDK 25；Maven 由 `./mvnw` 提供（3.9.16），不需另外安裝 |
+| 選用插件 | [PlaceholderAPI](#placeholderapi可選)（建議 2.12.3+）、[VeinMiner](#veinminer-整合可選) |
 
 ---
 
@@ -25,6 +28,23 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 產出 JAR：`target/AutoPickup-2.0.0.jar`
 
 > 建置前請將 `JAVA_HOME` 設為 JDK 25；enforcer 會拒絕其他版本。
+
+`./mvnw clean package` 會一併執行 `src/test` 的單元測試（JUnit 5 + Mockito）。這些是 characterization tests，記錄的是**目前的行為**；遊戲內的 GUI 與事件流程仍需手動測試。GitHub Actions 會在每次 push 到 `main` 與每個 PR 上執行同樣的建置，並把 JAR 上傳成 artifact。
+
+### 依賴
+
+| 依賴 | 版本 | 範圍 | 說明 |
+|------|------|------|------|
+| `io.papermc.paper:paper-api` | 26.2.build.132-stable | compile（伺服器提供） | 內含 Adventure 5.2.0 |
+| `me.clip:placeholderapi` | 2.11.7 | compile、optional | 不打包進 JAR；執行期使用伺服器上安裝的版本 |
+| `org.junit.jupiter:junit-jupiter` | 5.14.4 | test | |
+| `org.mockito:mockito-core` | 5.24.0 | test | 以 `-javaagent` 載入（surefire `argLine`） |
+
+Maven repositories：`https://repo.papermc.io/repository/maven-public/`、`https://repo.helpch.at/releases/`（PlaceholderAPI；舊網址 `repo.extendedclip.com` 已改為轉址）。
+
+建置插件：maven-compiler 3.16.0、maven-enforcer 3.6.3、maven-surefire 3.6.0、maven-dependency 3.8.1、maven-wrapper 3.2.0。
+
+輸出的 JAR 不含任何第三方函式庫（沒有 shade）。
 
 ---
 
@@ -92,16 +112,17 @@ settings:
   # 未使用過 /autopickup 的新玩家預設狀態
   default-enabled: false
 
+  # 拾取時在 ActionBar 顯示收到的物品與數量
+  actionbar:
+    enabled: true
+    # 最後一次拾取後，ActionBar 保留的時間（tick；20 tick = 1 秒）
+    display-ticks: 40
+
 messages:
-  toggled-on:    "&aAuto-pickup has been &fenabled&a."
-  toggled-off:   "&cAuto-pickup has been &fdisabled&c."
-  no-permission: "&cYou do not have permission to use this command."
-  players-only:  "&cThis command can only be used by players."
-  invalid-usage: "&cUsage: /autopickup [on|off|mode|reload]"
-  reloaded:      "&aConfiguration reloaded."
+  # …（見下方說明）
 ```
 
-訊息支援 `&` 色碼（如 `&a` 綠色）與 MiniMessage 標籤（如 `<green>`、`<#RRGGBB>`）。
+> **注意：** 目前所有聊天訊息都從 `lang.yml` 讀取，`config.yml` 裡的 `messages:` 區塊**不會被使用**。要修改訊息請編輯 `lang.yml`。
 
 ### `gui.yml`
 
@@ -116,7 +137,22 @@ messages:
 
 ### `lang.yml`
 
-與 `config.yml` 中的 `messages` 相同結構，未來可依語言切換。
+所有聊天訊息與 ActionBar 文字的來源。支援 `&` 色碼（如 `&a` 綠色）與 MiniMessage 標籤（如 `<green>`、`<#RRGGBB>`），兩種可以混用。
+
+```yaml
+messages:
+  toggled-on:    "&aAuto-pickup has been &fenabled&a."
+  toggled-off:   "&cAuto-pickup has been &fdisabled&c."
+  no-permission: "&cYou do not have permission to use this command."
+  players-only:  "&cThis command can only be used by players."
+  invalid-usage: "&cUsage: /autopickup [on|off|mode|reload]"
+  reloaded:      "&aConfiguration reloaded."
+
+  # ActionBar：{entries} = 各物品文字（以逗號分隔），{total} = 總數量
+  actionbar: "&a+ &f{entries}"
+  # 每種物品的格式：{item} = 物品翻譯鍵，{count} = 數量
+  actionbar-entry: "<translate:{item}> &7x{count}"
+```
 
 ---
 
@@ -127,7 +163,7 @@ messages:
 | `plugins/AutoPickup/players.yml` | 每位玩家的開關狀態（UUID → true/false） |
 | `plugins/AutoPickup/filters.yml` | 每位玩家的過濾模式與物品清單 |
 
-伺服器關閉或執行 `/autopickup reload` 時自動儲存；每次切換狀態後也會即時存檔。
+每次切換開關、或在 GUI 中修改過濾設定後會立即存檔；伺服器關閉時也會再存一次。`/autopickup reload` **不會**存檔，而是從磁碟重新讀取設定檔與這兩個資料檔。
 
 ---
 
@@ -139,3 +175,9 @@ messages:
 |--------|--------|
 | `%autopickup%` | `ON` 或 `OFF` |
 | `%autopickup_status%` | `ON` 或 `OFF` |
+
+---
+
+## VeinMiner 整合（可選）
+
+偵測到 [VeinMiner](https://github.com/MiraculixxT/Veinminer)（插件名稱 `Veinminer`）時會自動啟用：連鎖挖掘產生的掉落物同樣會依開關狀態與過濾清單直接進入背包。整合透過反射讀取 VeinMiner 的事件，若 VeinMiner 的 API 改版，此功能會自動停用而不會報錯。
