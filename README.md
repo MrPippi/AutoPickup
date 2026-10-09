@@ -29,7 +29,7 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 
 > 建置前請將 `JAVA_HOME` 設為 JDK 25；enforcer 會拒絕其他版本。
 
-`./mvnw clean package` 會一併執行 `src/test` 的單元測試（JUnit 5 + Mockito）。這些是 characterization tests，記錄的是**目前的行為**；遊戲內的 GUI 與事件流程仍需手動測試。GitHub Actions 會在每次 push 到 `main` 與每個 PR 上執行同樣的建置，並把 JAR 上傳成 artifact。
+`./mvnw clean package` 會一併執行 `src/test` 的單元測試（JUnit 6 + Mockito）。這些是 characterization tests，記錄的是**目前的行為**；遊戲內的 GUI 與事件流程仍需手動測試。GitHub Actions 會在每次 push 到 `main` 與每個 PR 上執行同樣的建置，並把 JAR 上傳成 artifact。
 
 ### 依賴
 
@@ -37,7 +37,7 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 |------|------|------|------|
 | `io.papermc.paper:paper-api` | 26.2.build.132-stable | compile（伺服器提供） | 內含 Adventure 5.2.0 |
 | `me.clip:placeholderapi` | 2.11.7 | compile、optional | 不打包進 JAR；執行期使用伺服器上安裝的版本 |
-| `org.junit.jupiter:junit-jupiter` | 5.14.4 | test | |
+| `org.junit.jupiter:junit-jupiter` | 6.1.3 | test | |
 | `org.mockito:mockito-core` | 5.24.0 | test | 以 `-javaagent` 載入（surefire `argLine`） |
 
 Maven repositories：`https://repo.papermc.io/repository/maven-public/`、`https://repo.helpch.at/releases/`（PlaceholderAPI；舊網址 `repo.extendedclip.com` 已改為轉址）。

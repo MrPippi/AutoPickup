@@ -19,7 +19,7 @@ A Paper Minecraft plugin (Java 25, Maven) that auto-pickups block drops directly
 
 **Requirements:** JDK 25 exactly (`[25,26)` range enforced). Set `JAVA_HOME` to JDK 25 before building.
 
-`./mvnw test` runs JUnit 5 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
+`./mvnw test` runs JUnit 6 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
 
 ---
 
@@ -174,7 +174,7 @@ Invalid UUID keys are silently skipped on load.
 |---|---|---|
 | `io.papermc.paper:paper-api` | 26.2.build.132-stable (Adventure 5.2.0) | compile |
 | `me.clip:placeholderapi` | 2.11.7 | compile, optional (not shaded) |
-| `org.junit.jupiter:junit-jupiter` | 5.14.4 | test |
+| `org.junit.jupiter:junit-jupiter` | 6.1.3 | test |
 | `org.mockito:mockito-core` | 5.24.0 | test (loaded via `-javaagent` in surefire `argLine`) |
 
 Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://repo.helpch.at/releases/`
