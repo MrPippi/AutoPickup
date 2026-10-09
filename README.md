@@ -10,16 +10,16 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 
 | 項目 | 版本 |
 |------|------|
-| 伺服器 | Paper 1.21.x（或相容分支，如 Purpur） |
+| 伺服器 | Paper 1.21.x（或相容分支，如 Purpur）；以 Paper API 1.21.11 建置 |
 | Java | 21 |
-| 建置 | JDK 21、Maven 3.6+ |
+| 建置 | JDK 21；Maven 由 `./mvnw` 提供（3.9.16） |
 
 ---
 
 ## 建置
 
 ```bash
-mvn clean package
+./mvnw clean package     # Windows：mvnw.cmd clean package
 ```
 
 產出 JAR：`target/AutoPickup-1.0.0.jar`

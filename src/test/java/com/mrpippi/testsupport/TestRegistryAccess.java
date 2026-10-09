@@ -24,8 +24,9 @@ public class TestRegistryAccess implements RegistryAccess {
 
     private static final Set<String> AIR = Set.of("air", "cave_air", "void_air");
 
+    /** Still abstract in Paper's interface, but deprecated for removal there; Paper itself uses the RegistryKey overload. */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "removal"})
     public <T extends Keyed> Registry<T> getRegistry(Class<T> type) {
         return mock(Registry.class);
     }

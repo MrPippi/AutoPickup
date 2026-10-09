@@ -5,7 +5,7 @@
 A Paper Minecraft plugin (Java 21, Maven) that auto-pickups block drops directly into the player's inventory when mining. Supports per-player toggle, whitelist/blacklist item filtering with a GUI, and PlaceholderAPI integration.
 
 - **Plugin version:** 1.0.0
-- **Paper API:** 1.21.1-R0.1-SNAPSHOT (API version `1.21`)
+- **Paper API:** 1.21.11-R0.1-SNAPSHOT (API version `1.21`)
 - **Java:** 21 (required — enforced by `maven-enforcer-plugin`)
 - **Build output:** `target/AutoPickup-1.0.0.jar`
 
@@ -172,7 +172,7 @@ Invalid UUID keys are silently skipped on load.
 
 | Dependency | Version | Scope |
 |---|---|---|
-| `io.papermc.paper:paper-api` | 1.21.1-R0.1-SNAPSHOT | compile |
+| `io.papermc.paper:paper-api` | 1.21.11-R0.1-SNAPSHOT | compile |
 | `me.clip:placeholderapi` | 2.11.7 | compile, optional |
 
 Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://repo.helpch.at/releases/`
