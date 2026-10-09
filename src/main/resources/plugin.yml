@@ -1,5 +1,5 @@
 name: AutoPickup
-version: '2.0.0'
+version: '2.0.1'
 main: com.autopickup.AutoPickupPlugin
 api-version: '26.2'
 author: AutoPickup

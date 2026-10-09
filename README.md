@@ -25,7 +25,7 @@ Paper 插件：玩家挖掘方塊時，掉落物自動進入背包。背包已�
 ./mvnw clean package     # Windows：mvnw.cmd clean package
 ```
 
-產出 JAR：`target/AutoPickup-2.0.0.jar`
+產出 JAR：`target/AutoPickup-2.0.1.jar`
 
 > 建置前請將 `JAVA_HOME` 設為 JDK 25；enforcer 會拒絕其他版本。
 
@@ -50,7 +50,7 @@ Maven repositories：`https://repo.papermc.io/repository/maven-public/`、`https
 
 ## 安裝
 
-1. 將 `AutoPickup-2.0.0.jar` 放入伺服器 `plugins/` 目錄。
+1. 將 `AutoPickup-2.0.1.jar` 放入伺服器 `plugins/` 目錄。
 2. 啟動或重載伺服器（`/reload confirm` 或重啟）。
 3. 插件會自動建立 `plugins/AutoPickup/config.yml`、`gui.yml`、`lang.yml`。
 
