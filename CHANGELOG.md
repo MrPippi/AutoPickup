@@ -2,6 +2,12 @@
 
 本專案的重要變更都記錄在這裡。格式參考 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.1.0/)，版本號遵循 [Semantic Versioning](https://semver.org/lang/zh-TW/)。
 
+## [Unreleased]
+
+### 變更
+
+- 測試依賴：JUnit 5.14.4 → 6.1.3。只影響測試，產出的 JAR 不變；81 個測試不需修改即全數通過。
+
 ## [2.0.0] - 2026-10-09
 
 ### ⚠️ 不相容變更
@@ -51,5 +57,6 @@
 - 核心功能的 characterization tests（JUnit 5 + Mockito，共 73 個），記錄目前的行為。
 - 測試用的 `TestRegistryAccess`，讓 `Material.isAir()` 不需要啟動伺服器也能在測試中使用。
 
+[Unreleased]: https://github.com/MrPippi/AutoPickup/compare/v2.0.0...HEAD
 [2.0.0]: https://github.com/MrPippi/AutoPickup/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/MrPippi/AutoPickup/tree/6c3257c
