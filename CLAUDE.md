@@ -60,7 +60,7 @@ Note: directory is `com/mrpippi/`; Java package declarations use `com.autopickup
 - Calls `saveDefaultConfig()`, `loadGuiConfig()`, then reads `settings.default-enabled`
 - Instantiates `PlayerStateManager` and `FilterManager`, registers listeners and command
 - PlaceholderAPI integration is **optional** and loaded via reflection so the plugin runs without PAPI on the classpath
-- `getMessage(String path)` reads from `config.yml`, converts `&` codes and MiniMessage tags via `legacyToMiniMessage()` + `MiniMessage.deserialize()`
+- `getMessage(String path)` reads from `lang.yml` (always loaded in `onEnable`, so `config.yml` `messages:` is effectively unused), converts `&` codes and MiniMessage tags via `legacyToMiniMessage()` + `MiniMessage.deserialize()`
 - `getGuiMessage(String path)` does the same but reads from `gui.yml`
 - `reload()` reloads all config/data files; called by `/autopickup reload`
 
@@ -95,7 +95,7 @@ Note: directory is `com/mrpippi/`; Java package declarations use `com.autopickup
 ### AutoPickupTabCompleter
 - Suggests `["on", "off", "mode", "reload"]` for the first argument
 - Filters by prefix typed so far
-- Only suggests to `Player` senders with `autopickup.use` permission
+- Does not check sender type or `autopickup.use`; `reload` is only suggested to senders with `autopickup.reload`
 
 ### FilterGuiListener
 - Opens a 6-row chest GUI via `filterGuiListener.openGui(player, page, searchTerm)`
@@ -129,7 +129,7 @@ messages:
   reloaded:      "&aConfiguration reloaded."
 ```
 
-All message values support `&` color codes and MiniMessage tags. Accessed via `AutoPickupPlugin.getMessage(String path)`.
+All message values support `&` color codes and MiniMessage tags. Note: `getMessage()` actually reads `lang.yml`, so these `messages:` entries are not used at runtime. `settings.actionbar.enabled` / `display-ticks` control the ActionBar pickup notification.
 
 ### `gui.yml`
 Controls all GUI text: title format, button names/lore, mode display names, item slot prefixes.
@@ -137,7 +137,7 @@ Supports the same color code syntax plus runtime placeholders: `{mode}`, `{page}
 Accessed via `AutoPickupPlugin.getGuiMessage(String path)` or `getGuiConfig()`.
 
 ### `lang.yml`
-Mirrors the `messages:` block from `config.yml`. Same keys and syntax; reserved for future language switching.
+Source of all chat messages (`messages.*`) plus the ActionBar templates `messages.actionbar` / `messages.actionbar-entry`. Same keys and syntax as the `config.yml` `messages:` block.
 
 ### `plugin.yml`
 - Command: `autopickup`, alias: `ap`
@@ -172,10 +172,16 @@ Invalid UUID keys are silently skipped on load.
 
 | Dependency | Version | Scope |
 |---|---|---|
-| `io.papermc.paper:paper-api` | 26.2.build.132-stable | compile |
-| `me.clip:placeholderapi` | 2.11.7 | compile, optional |
+| `io.papermc.paper:paper-api` | 26.2.build.132-stable (Adventure 5.2.0) | compile |
+| `me.clip:placeholderapi` | 2.11.7 | compile, optional (not shaded) |
+| `org.junit.jupiter:junit-jupiter` | 5.14.4 | test |
+| `org.mockito:mockito-core` | 5.24.0 | test (loaded via `-javaagent` in surefire `argLine`) |
 
 Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://repo.helpch.at/releases/`
+
+Build plugins: maven-compiler 3.16.0 (`maven.compiler.release` property), maven-enforcer 3.6.3, maven-surefire 3.6.0, maven-dependency 3.8.1 (`properties` goal feeds the Mockito agent path), maven-wrapper 3.2.0 (Maven 3.9.16).
+
+CI: `.github/workflows/build.yml` runs `./mvnw -B verify` on JDK 25 (Temurin) and uploads the jar. See `CHANGELOG.md` for version history.
 
 ---
 
