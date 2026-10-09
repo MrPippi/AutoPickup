@@ -181,7 +181,7 @@ Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://re
 
 Build plugins: maven-compiler 3.16.0 (`maven.compiler.release` property), maven-enforcer 3.6.3, maven-surefire 3.6.0, maven-dependency 3.8.1 (`properties` goal feeds the Mockito agent path), maven-wrapper 3.2.0 (Maven 3.9.16).
 
-CI: `.github/workflows/build.yml` runs `./mvnw -B verify` on JDK 25 (Temurin) and uploads the jar. See `CHANGELOG.md` for version history.
+CI: `.github/workflows/build.yml` runs `./mvnw -B verify` on JDK 25 (Temurin) and uploads the jar. `.github/workflows/release.yml` publishes a GitHub Release (jar + notes from `CHANGELOG.md`) on a `v*` tag push or a manual run with `tag` / `target` / `java-version` inputs. See `CHANGELOG.md` for version history.
 
 ---
 

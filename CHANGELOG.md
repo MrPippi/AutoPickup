@@ -23,6 +23,7 @@
 
 - Maven Wrapper（`mvnw` / `mvnw.cmd`），固定使用 Maven 3.9.16。`.gitattributes` 讓 `*.cmd` 使用 CRLF 換行。
 - GitHub Actions（`.github/workflows/build.yml`）：每次 push 到 `main` 和每個 PR 都會用 JDK 25 執行 `./mvnw -B verify`，並上傳 JAR。使用 `actions/checkout@v7`、`actions/setup-java@v6`、`actions/upload-artifact@v7`（皆為 Node.js 24 runtime）。
+- Release workflow（`.github/workflows/release.yml`）：推送 `v*` tag，或在 Actions 頁面手動執行（可指定 commit、JDK 版本），就會建置 JAR 並發布成 GitHub Release，說明文字取自本檔案對應的版本段落。
 - 本檔案（`CHANGELOG.md`）。
 
 ### 移除
