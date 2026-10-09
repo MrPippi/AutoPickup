@@ -198,7 +198,7 @@ public class AutoPickupPlugin extends JavaPlugin {
      *   <li>{@code §} variants of the above
      * </ul>
      */
-    static String legacyToMiniMessage(String text) {
+    public static String legacyToMiniMessage(String text) {
         if (text == null || text.isEmpty()) return "";
         StringBuilder out = new StringBuilder(text.length());
         for (int i = 0; i < text.length(); i++) {

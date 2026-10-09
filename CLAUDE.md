@@ -19,7 +19,7 @@ mvn clean package
 
 **Requirements:** JDK 21 exactly (`[21,22)` range enforced). Set `JAVA_HOME` to JDK 21 before building.
 
-Testing is done manually in-game; there is no `src/test` directory.
+`mvn test` runs JUnit 5 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
 
 ---
 
