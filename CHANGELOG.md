@@ -51,5 +51,5 @@
 - 核心功能的 characterization tests（JUnit 5 + Mockito，共 73 個），記錄目前的行為。
 - 測試用的 `TestRegistryAccess`，讓 `Material.isAir()` 不需要啟動伺服器也能在測試中使用。
 
-[2.0.0]: https://github.com/MrPippi/AutoPickup/compare/6c3257c...main
+[2.0.0]: https://github.com/MrPippi/AutoPickup/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/MrPippi/AutoPickup/tree/6c3257c
