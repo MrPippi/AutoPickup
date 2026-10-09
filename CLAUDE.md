@@ -2,24 +2,24 @@
 
 ## Project Overview
 
-A Paper Minecraft plugin (Java 21, Maven) that auto-pickups block drops directly into the player's inventory when mining. Supports per-player toggle, whitelist/blacklist item filtering with a GUI, and PlaceholderAPI integration.
+A Paper Minecraft plugin (Java 25, Maven) that auto-pickups block drops directly into the player's inventory when mining. Supports per-player toggle, whitelist/blacklist item filtering with a GUI, and PlaceholderAPI integration.
 
-- **Plugin version:** 1.0.0
-- **Paper API:** 1.21.1-R0.1-SNAPSHOT (API version `1.21`)
-- **Java:** 21 (required — enforced by `maven-enforcer-plugin`)
-- **Build output:** `target/AutoPickup-1.0.0.jar`
+- **Plugin version:** 2.0.0
+- **Paper API:** 26.2.build.132-stable (API version `26.2`)
+- **Java:** 25 (required — enforced by `maven-enforcer-plugin`)
+- **Build output:** `target/AutoPickup-2.0.0.jar`
 
 ---
 
 ## Build
 
 ```bash
-mvn clean package
+./mvnw clean package      # Maven wrapper (pins Maven 3.9.16); plain `mvn` also works
 ```
 
-**Requirements:** JDK 21 exactly (`[21,22)` range enforced). Set `JAVA_HOME` to JDK 21 before building.
+**Requirements:** JDK 25 exactly (`[25,26)` range enforced). Set `JAVA_HOME` to JDK 25 before building.
 
-`mvn test` runs JUnit 5 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
+`./mvnw test` runs JUnit 5 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
 
 ---
 
@@ -172,16 +172,16 @@ Invalid UUID keys are silently skipped on load.
 
 | Dependency | Version | Scope |
 |---|---|---|
-| `io.papermc.paper:paper-api` | 1.21.1-R0.1-SNAPSHOT | compile |
-| `me.clip:placeholderapi` | 2.11.6 | compile, optional |
+| `io.papermc.paper:paper-api` | 26.2.build.132-stable | compile |
+| `me.clip:placeholderapi` | 2.11.7 | compile, optional |
 
-Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://repo.extendedclip.com/content/repositories/placeholderapi/`
+Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://repo.helpch.at/releases/`
 
 ---
 
 ## Conventions & Rules
 
-1. **Java 21** — use modern features (records, pattern matching, `var`, streams). The enforcer will reject other JDK versions.
+1. **Java 25** — use modern features (records, pattern matching, `var`, streams). The enforcer will reject other JDK versions.
 2. **Adventure API for all messages** — never use `ChatColor`; always go through `AutoPickupPlugin.getMessage()` / `getGuiMessage()` which use MiniMessage internally.
 3. **No static plugin references** — pass `AutoPickupPlugin`, `PlayerStateManager`, `FilterManager` via constructor injection.
 4. **PlaceholderAPI is optional** — any code that directly references PAPI classes must remain in `placeholder/` and be loaded only via reflection in `AutoPickupPlugin.onEnable`.

@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  * Test-only RegistryAccess, loaded by Paper via ServiceLoader
  * (META-INF/services/io.papermc.paper.registry.RegistryAccess).
  *
- * <p>Paper 1.21's {@code Material.isAir()} looks up the block registry, which normally
+ * <p>Paper's {@code Material.isAir()} looks up the block registry, which normally
  * requires a running server. This stub returns a BlockType whose {@code isAir()} is true
  * for air, cave_air and void_air; every other registry is an empty mock.
  */
@@ -24,8 +24,9 @@ public class TestRegistryAccess implements RegistryAccess {
 
     private static final Set<String> AIR = Set.of("air", "cave_air", "void_air");
 
+    /** Still abstract in Paper's interface, but deprecated for removal there; Paper itself uses the RegistryKey overload. */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "removal"})
     public <T extends Keyed> Registry<T> getRegistry(Class<T> type) {
         return mock(Registry.class);
     }

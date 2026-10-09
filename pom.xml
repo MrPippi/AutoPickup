@@ -6,15 +6,14 @@
 
     <groupId>com.autopickup</groupId>
     <artifactId>AutoPickup</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
     <name>AutoPickup</name>
     <description>Auto-pickup block drops into player inventory when mining</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
     </properties>
 
     <repositories>
@@ -24,7 +23,7 @@
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.helpch.at/releases/</url>
         </repository>
     </repositories>
 
@@ -32,12 +31,12 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <version>26.2.build.132-stable</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.6</version>
+            <version>2.11.7</version>
             <optional>true</optional>
         </dependency>
 
@@ -45,13 +44,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.10.2</version>
+            <version>5.14.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
+            <version>5.24.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -61,7 +60,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -71,8 +70,8 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[21,22)</version>
-                                    <message>Build requires JDK 21. Paper API 1.21.x is compiled with Java 21. Set JAVA_HOME to JDK 21.</message>
+                                    <version>[25,26)</version>
+                                    <message>Build requires JDK 25. Paper API 26.x is compiled with Java 25. Set JAVA_HOME to JDK 25.</message>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -82,24 +81,36 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                    <release>21</release>
-                </configuration>
+                <version>3.16.0</version>
+            </plugin>
+            <plugin>
+                <!-- Exposes ${org.mockito:mockito-core:jar} for the surefire argLine below -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.6.0</version>
+                <configuration>
+                    <!-- Load Mockito as a Java agent instead of relying on runtime self-attach (Java 21+) -->
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar}</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-wrapper-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <distributionUrl>https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.6/apache-maven-3.9.6-bin.zip</distributionUrl>
+                    <distributionUrl>https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.9.16/apache-maven-3.9.16-bin.zip</distributionUrl>
                 </configuration>
             </plugin>
         </plugins>
