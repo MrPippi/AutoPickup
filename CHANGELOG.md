@@ -6,7 +6,7 @@
 
 ### 變更
 
-- Release workflow 使用的 `actions/checkout`、`actions/setup-java` 改用完整的 commit SHA 固定版本（v7.0.1、v6.0.1），避免有 `contents: write` 權限的 workflow 因為上游 tag 被改動而執行到不同的程式碼。
+- 所有 GitHub Actions 改用完整的 commit SHA 固定版本：`actions/checkout` v7.0.1、`actions/setup-java` v6.0.1（Build 與 Release workflow）、`actions/upload-artifact` v7.0.2（Build workflow）。避免上游 tag 被改動時執行到不同的程式碼，Release workflow 有 `contents: write` 權限，這點尤其重要。
 
 ## [2.0.1] - 2026-10-09
 
