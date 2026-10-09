@@ -14,12 +14,12 @@ A Paper Minecraft plugin (Java 21, Maven) that auto-pickups block drops directly
 ## Build
 
 ```bash
-mvn clean package
+./mvnw clean package      # Maven wrapper (pins Maven 3.9.16); plain `mvn` also works
 ```
 
 **Requirements:** JDK 21 exactly (`[21,22)` range enforced). Set `JAVA_HOME` to JDK 21 before building.
 
-`mvn test` runs JUnit 5 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
+`./mvnw test` runs JUnit 5 + Mockito characterization tests in `src/test` (they record current behaviour, not desired behaviour). In-game testing is still needed for GUI/event wiring. `src/test/.../testsupport/TestRegistryAccess` lets `Material.isAir()` work without a server.
 
 ---
 
