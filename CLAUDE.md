@@ -173,7 +173,7 @@ Invalid UUID keys are silently skipped on load.
 | Dependency | Version | Scope |
 |---|---|---|
 | `io.papermc.paper:paper-api` | 1.21.1-R0.1-SNAPSHOT | compile |
-| `me.clip:placeholderapi` | 2.11.6 | compile, optional |
+| `me.clip:placeholderapi` | 2.11.7 | compile, optional |
 
 Repositories: `https://repo.papermc.io/repository/maven-public/` and `https://repo.helpch.at/releases/`
 
